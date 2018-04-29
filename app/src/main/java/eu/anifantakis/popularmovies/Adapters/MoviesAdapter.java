@@ -1,13 +1,14 @@
 package eu.anifantakis.popularmovies.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
@@ -15,16 +16,23 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import eu.anifantakis.popularmovies.R;
 import eu.anifantakis.popularmovies.DataModels.MoviesCollection;
+import eu.anifantakis.popularmovies.R;
 import eu.anifantakis.popularmovies.databinding.MovieRowBinding;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewHolder> {
     final private MovieItemClickListener mOnClickListener;
     private MoviesCollection collection;
 
+    Activity mActivity;
     public MoviesAdapter(MovieItemClickListener clickListener) {
         this.mOnClickListener = clickListener;
+        mActivity = (Activity) clickListener;
+    }
+
+    public MoviesAdapter(MovieItemClickListener clickListener, Activity activity) {
+        this.mOnClickListener = clickListener;
+        mActivity = activity;
     }
 
     public MoviesCollection.Movie getMovieAtIndex(int index) {
@@ -78,7 +86,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
     }
 
     public interface MovieItemClickListener {
-        void onMovieItemClick(int clickedItemIndex);
+        void onMovieItemClick(int clickedItemIndex, ImageView sharedImage);
     }
 
     public class MovieViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -147,7 +155,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
-            mOnClickListener.onMovieItemClick(clickedPosition);
+            mOnClickListener.onMovieItemClick(clickedPosition, binding.rowIvMovieThumb);
         }
     }
 }

@@ -4,7 +4,7 @@
     <string name="network.api_key" translatable="false">
         <!-- ======================= [PUT YOUR API KEY ANYWHERE UNDER THIS LINE ] ======================== -->
 
-        PUT YOUR API KEY HERE
+        bcb3bde29d27f221a554d9f491bfa0c3
 
         <!-- ======================= [PUT YOUR API KEY ANYWHERE ABOVE THIS LINE ] ======================== -->
     </string>
@@ -75,5 +75,6 @@
     <string name="youtube_video_url" translatable="false">https://www.youtube.com/watch?v=</string>
     <string name="youtube_img_url" translatable="false">http://img.youtube.com/vi/</string>
 
+    <string name="transition_photo" translatable="false">transition_photo</string>
 
 </resources>

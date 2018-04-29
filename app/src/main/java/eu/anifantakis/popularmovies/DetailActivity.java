@@ -11,16 +11,18 @@ import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -50,6 +52,8 @@ public class DetailActivity extends AppCompatActivity implements
 
     public static TrailersCollection cachedTrailersCollection = null;
     public static ReviewsCollection cachedReviewsCollection = null;
+
+    private Bitmap lowResBitmap = null;
 
     private MoviesCollection.Movie movie = null;
     private ActivityDetailBinding binding;
@@ -276,11 +280,18 @@ public class DetailActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
+        supportPostponeEnterTransition();
+
         // Receive the Parcelable Movie object from the extras of the intent.
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             if (extras.containsKey("movie")) {
                 movie = getIntent().getParcelableExtra("movie");
+            }
+            // place directly the low res image from the main activity so there are no delays in the Transition
+            // then later we will load the higher res image
+            if (extras.containsKey("low_res_bitmap")){
+                lowResBitmap = getIntent().getParcelableExtra("low_res_bitmap");
             }
         }
 
@@ -292,6 +303,8 @@ public class DetailActivity extends AppCompatActivity implements
         }
         else{
             binding.fab.setImageResource(R.drawable.ic_star_border_white_48dp);
+            binding.detailIvImgHoriz.setImageBitmap(lowResBitmap);
+            supportStartPostponedEnterTransition();
         }
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -321,9 +334,11 @@ public class DetailActivity extends AppCompatActivity implements
         // Get the synopsis (overview)
         binding.includedTab1.detailTvSynopsis.setText(movie.getOverview());
 
+        supportPostponeEnterTransition();
+
         // then load the large image
-        setImage(false, movie.getBackdropPath());
-        setImage(true, movie.getPosterPath());
+        setImage(false, movie.getBackdropPath(), true);
+        setImage(true, movie.getPosterPath(), false);
 
         //=================== TRAILERS =====================
         addTab("Trailers", R.id.tab2);
@@ -429,7 +444,7 @@ public class DetailActivity extends AppCompatActivity implements
      * @param setPoster if true the image refers to poster, backdropPath otherwise
      * @param image The image id
      */
-    void setImage(boolean setPoster, String image) {
+    void setImage(boolean setPoster, String image, boolean withTransition) {
         // sample
         // https://image.tmdb.org/t/p/w780/lkOZcsXcOLZYeJ2YxJd3vSldvU4.jpg
 
@@ -460,9 +475,48 @@ public class DetailActivity extends AppCompatActivity implements
 
         // load the image from the web
         String imagePath = getString(R.string.network_url_images) +targetWidth;
-        Picasso.with(this)
-                .load(imagePath + image)
-                .into(targetView);
+        if (withTransition){
+            targetView.setTransitionName(getString(R.string.transition_photo));
+
+            Picasso.with(this)
+                    .load(imagePath + image)
+                    .noFade()
+                    .placeholder(targetView.getDrawable())
+                    .into(targetView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            supportStartPostponedEnterTransition();
+                        }
+
+                        @Override
+                        public void onError() {
+                            supportStartPostponedEnterTransition();
+                        }
+                    });
+        }
+        else {
+            Picasso.with(this)
+                    .load(imagePath + image)
+                    .placeholder(targetView.getDrawable())
+                    .into(targetView);
+        }
+    }
+
+    /**
+     * When the arrow is pressed on the action bar, close the activity
+     * by invoking the original "back button pressing". This is to reverse transition
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                super.onBackPressed();
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

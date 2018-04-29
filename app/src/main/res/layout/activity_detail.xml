@@ -27,7 +27,8 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/detail.img_description"
                     app:layout_collapseMode="parallax"
-                    tools:src="@drawable/backdrop_noimage" />
+                    tools:src="@drawable/backdrop_noimage"
+                    android:transitionName="@string/transition_photo"/>
 
                 <FrameLayout
                     android:id="@+id/detail_framelayout_title"
@@ -131,7 +132,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="16dp"
-            android:src="@drawable/ic_star_border_white_48dp" />
+            android:src="@drawable/ic_star_border_white_48dp"
+            app:elevation="6dp"
+            app:fabSize="mini"
+            app:pressedTranslationZ="12dp" />
 
 
     </android.support.design.widget.CoordinatorLayout>

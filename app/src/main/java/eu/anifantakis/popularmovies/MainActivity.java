@@ -9,7 +9,10 @@ import android.content.Loader;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import java.io.IOException;
 import java.net.URL;
@@ -237,7 +241,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onMovieItemClick(int clickedItemIndex) {
+    public void onMovieItemClick(int clickedItemIndex, ImageView sharedImage) {
         // clear the loaders caching on the Detail Activity to receive fresh content per movie.
         DetailActivity.cachedTrailersCollection = null;
         DetailActivity.cachedReviewsCollection = null;
@@ -245,7 +249,22 @@ public class MainActivity extends AppCompatActivity implements
         // create an intent to call the detail activity.
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("movie", moviesAdapter.getMovieAtIndex(clickedItemIndex));
-        startActivityForResult(intent, 1);
+
+        // together with the info of the movie, pass the low res image of the recycler view
+        // so there are ZERO delays in the "Share Element Transitions" and the DetailActivity loads instantly
+        // then, later inside the DetailActivity, we will replace the low res image with high res
+        Bitmap bm=((BitmapDrawable)sharedImage.getDrawable()).getBitmap();
+        intent.putExtra("low_res_bitmap", bm);
+
+        // bundle for the transition effect
+        Bundle bundle = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(
+                        this,
+                        sharedImage,
+                        sharedImage.getTransitionName()
+                ).toBundle();
+
+        startActivity(intent, bundle);
     }
 
     @Override

@@ -20,7 +20,8 @@
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/row.thumb_description"
-                tools:src="@drawable/backdrop_noimage" />
+                tools:src="@drawable/backdrop_noimage"
+                android:transitionName="@string/transition_photo"/>
 
             <TextView
                 android:id="@+id/row_tv_title"
