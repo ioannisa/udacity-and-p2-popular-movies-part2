@@ -22,5 +22,10 @@ Movie Details
 
 ![Detail Activity](https://raw.githubusercontent.com/test2209/assets-udacity-and/master/project-2-popular-movies-2/screenshot-3.gif)
 
+Shared Element Transitions between Master/Detail activities
+
+![Detail Activity](https://raw.githubusercontent.com/test2209/assets-udacity-and/master/project-2-popular-movies-2/screenshot-4.gif)
+
+
 More Asseets here
 https://github.com/test2209/assets-udacity-and/tree/master/project-2-popular-movies-2
