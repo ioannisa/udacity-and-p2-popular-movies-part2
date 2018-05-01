@@ -4,7 +4,7 @@
     <string name="network.api_key" translatable="false">
         <!-- ======================= [PUT YOUR API KEY ANYWHERE UNDER THIS LINE ] ======================== -->
 
-        bcb3bde29d27f221a554d9f491bfa0c3
+        PUT_YOUR_API_KEY_HERE
 
         <!-- ======================= [PUT YOUR API KEY ANYWHERE ABOVE THIS LINE ] ======================== -->
     </string>
@@ -23,6 +23,10 @@
     <string name="menu.mi_sort_popular">Most Popular</string>
     <string name="menu.mi_sort_most_voted">Most Voted</string>
     <string name="menu.mi_favourites">Favourites</string>
+
+    <!-- Snackbar -->
+    <string name="favourites_add">Movie Added on Favorites</string>
+    <string name="favourites_removed">Movie Removed from Favorites</string>
 
     <!-- Main Activity Action Bar Strings -->
     <string name="main.actionbar_most_popular"> Movies: Most Popular</string>
@@ -76,5 +80,7 @@
     <string name="youtube_img_url" translatable="false">http://img.youtube.com/vi/</string>
 
     <string name="transition_photo" translatable="false">transition_photo</string>
+
+
 
 </resources>

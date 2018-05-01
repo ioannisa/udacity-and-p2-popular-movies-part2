@@ -14,6 +14,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -245,6 +246,8 @@ public class DetailActivity extends AppCompatActivity implements
         if(uri != null) {
             binding.fab.setImageResource(R.drawable.ic_star_white_48dp);
         }
+
+        Snackbar.make(binding.detailContentLayout, R.string.favourites_add, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -256,6 +259,8 @@ public class DetailActivity extends AppCompatActivity implements
         getContentResolver().delete(uri, null, null);
 
         binding.fab.setImageResource(R.drawable.ic_star_border_white_48dp);
+
+        Snackbar.make(binding.detailContentLayout, R.string.favourites_removed, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
@@ -321,7 +326,7 @@ public class DetailActivity extends AppCompatActivity implements
 
         // Set ActionBar title to that of the movie title.
         setTitle(movie.getTitle());
-        binding.detailTvTitle.setText(movie.getTitle());
+        binding.detailTvTitleToolbar.setTitle(movie.getTitle());
         binding.includedTab1.detailTvTitle2.setText(movie.getTitle());
 
         // setup the rating
@@ -503,6 +508,16 @@ public class DetailActivity extends AppCompatActivity implements
     }
 
     /**
+     * IF WE DONT MAKE USE OF THE ACTUAL ANDROID TOOLBAR
+     * Then we have a drawable arrow icon on the upper left of the poster to act as back button
+     * @param view
+     */
+    public void actionUpClicked(View view) {
+        super.onBackPressed();
+    }
+
+    /**
+     * IF WE MAKE USE OF THE ACTUAL ANDROID TOOLBAR...
      * When the arrow is pressed on the action bar, close the activity
      * by invoking the original "back button pressing". This is to reverse transition
      * @param item

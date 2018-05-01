@@ -21,7 +21,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="eu.anifantakis.popularmovies.DetailActivity">
+        <activity android:name="eu.anifantakis.popularmovies.DetailActivity"
+            android:theme="@style/AppTheme.Detail">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="eu.anifantakis.popularmovies.MainActivity" />
