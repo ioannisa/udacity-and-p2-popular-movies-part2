@@ -103,7 +103,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
         File[] files=mActivity.getCacheDir().listFiles();
         Log.d("FILES IN CACHE", ""+files.length);
 
-        picasso.setIndicatorsEnabled(true);
+        // indicator for checking picasso caching - need to comment out on release
+        //picasso.setIndicatorsEnabled(true);
 
         return picasso;
     }
@@ -190,7 +191,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
                 binding.rowIvMovieThumb.setImageResource(R.drawable.backdrop_noimage);
             }else {
                 image = context.getString(R.string.network_url_images) + context.getString(R.string.network_width_342) + image;
-                picassoCached.with(context)
+                Picasso.with(context)
                         .load(image)
                         .into(binding.rowIvMovieThumb);
             }
