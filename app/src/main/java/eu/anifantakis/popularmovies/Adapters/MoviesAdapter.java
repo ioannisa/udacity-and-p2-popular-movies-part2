@@ -79,7 +79,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.MovieViewH
      * @return
      */
     public Picasso getPicasso() {
-        // https://gist.github.com/iamtodor/eb7f02fc9571cc705774408a474d5dcb
+        // Source: https://gist.github.com/iamtodor/eb7f02fc9571cc705774408a474d5dcb
         OkHttpClient okHttpClient1 = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override

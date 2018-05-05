@@ -18,10 +18,13 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.GestureDetector;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -38,6 +41,7 @@ import eu.anifantakis.popularmovies.DataModels.MoviesCollection;
 import eu.anifantakis.popularmovies.DataModels.MoviesDBContract;
 import eu.anifantakis.popularmovies.DataModels.ReviewsCollection;
 import eu.anifantakis.popularmovies.DataModels.TrailersCollection;
+import eu.anifantakis.popularmovies.Utils.AnimatedTabHostListener;
 import eu.anifantakis.popularmovies.Utils.NetworkUtils;
 import eu.anifantakis.popularmovies.Utils.PopularMoviesJSonUtils;
 import eu.anifantakis.popularmovies.databinding.ActivityDetailBinding;
@@ -287,11 +291,30 @@ public class DetailActivity extends AppCompatActivity implements
 
         // set the toolbar in our xml as the ActionBar for this activity and then define a default back button
         // That way we implemented native back button (not ImageButton) functionality as a "transparent" ActionBar
-        // https://stackoverflow.com/questions/26651602/display-back-arrow-on-toolbar
+        // Source: https://stackoverflow.com/questions/26651602/display-back-arrow-on-toolbar
         setSupportActionBar(binding.detailTvTitleToolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        // Gesture detection
+        gestureDetector = new GestureDetector(this, new MyGestureDetector());
+        gestureListener = new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        };
+
+        // Specify what views will make use of the Gesture Detector
+        binding.tab1.setOnTouchListener(gestureListener);
+
+        binding.tab2.setOnTouchListener(gestureListener);
+        binding.includedTab2.rvTrailersList.setOnTouchListener(gestureListener);
+
+        binding.tab3.setOnTouchListener(gestureListener);
+        binding.includedTab3.rvReviewsList.setOnTouchListener(gestureListener);
+
+
 
         supportPostponeEnterTransition();
 
@@ -403,6 +426,9 @@ public class DetailActivity extends AppCompatActivity implements
         if (savedInstanceState != null) {
             binding.tabHost.setCurrentTab(savedInstanceState.getInt("CURRENT_TAB"));
         }
+
+        // enable tabhost animation when changing tabs - Thus will enchant the GESTURES with a nice sliding animation
+        binding.tabHost.setOnTabChangedListener(new AnimatedTabHostListener(this, binding.tabHost));
     }
 
     private void addTab(String tabName, int contentId) {
@@ -459,7 +485,7 @@ public class DetailActivity extends AppCompatActivity implements
      */
     void setImage(boolean setPoster, String image, boolean withTransition) {
         // sample
-        // https://image.tmdb.org/t/p/w780/lkOZcsXcOLZYeJ2YxJd3vSldvU4.jpg
+        // Source: https://image.tmdb.org/t/p/w780/lkOZcsXcOLZYeJ2YxJd3vSldvU4.jpg
 
         ImageView targetView = null;
         String targetWidth = null;
@@ -552,4 +578,43 @@ public class DetailActivity extends AppCompatActivity implements
     public void onTrailerItemClick(int clickedItemIndex) {
         watchYoutubeVideo(this, trailersAdapter.getMovieTrailerAtIndex(clickedItemIndex).getKey());
     }
+
+    /**
+     *  GESTURE DETECTION
+     */
+
+    // Source: https://stackoverflow.com/questions/937313/fling-gesture-detection-on-grid-layout
+    // Swipe - Slide tabs
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+    private GestureDetector gestureDetector;
+    View.OnTouchListener gestureListener;
+
+    class MyGestureDetector extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            try {
+                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                    return false;
+                // right to left swipe
+                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    //Toast.makeText(DetailActivity.this, "Left Swipe", Toast.LENGTH_SHORT).show();
+                    binding.tabHost.setCurrentTab(binding.tabHost.getCurrentTab()+1);
+                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                    //Toast.makeText(DetailActivity.this, "Right Swipe", Toast.LENGTH_SHORT).show();
+                    binding.tabHost.setCurrentTab(binding.tabHost.getCurrentTab()-1);
+                }
+            } catch (Exception e) {
+                // nothing
+            }
+            return false;
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return false;
+        }
+    }
+
 }
