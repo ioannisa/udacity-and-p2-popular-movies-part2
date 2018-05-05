@@ -50,17 +50,6 @@
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     app:layout_collapseMode="pin"
                     app:title="">
-
-                    <ImageButton
-                        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                        android:id="@+id/action_up"
-                        android:layout_width="45dp"
-                        android:layout_height="?actionBarSize"
-                        android:adjustViewBounds="true"
-                        android:onClick="actionUpClicked"
-                        android:background="?selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_arrow_back_white_24dp" />
-
                 </android.support.v7.widget.Toolbar>
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>

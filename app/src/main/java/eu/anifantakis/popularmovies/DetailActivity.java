@@ -285,6 +285,14 @@ public class DetailActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
+        // set the toolbar in our xml as the ActionBar for this activity and then define a default back button
+        // That way we implemented native back button (not ImageButton) functionality as a "transparent" ActionBar
+        // https://stackoverflow.com/questions/26651602/display-back-arrow-on-toolbar
+        setSupportActionBar(binding.detailTvTitleToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         supportPostponeEnterTransition();
 
         // Receive the Parcelable Movie object from the extras of the intent.
